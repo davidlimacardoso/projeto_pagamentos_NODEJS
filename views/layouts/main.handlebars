@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projeto Node.JS</title>
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    {{!-- <link rel="stylesheet" href="/materialize/css/materialize.min.css"> --}}
+    {{!-- <link href="/materialize/fonts/iconFamily.css" rel="stylesheet"> --}}
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <script defer src="/js/fontawesome-all.min.js"></script>
+
+    {{!-- <script src="/materialize/js/materialize.min.js"></script> --}}
+</head>
+
+<body>
+
+    {{>_header}}
+
+    <div class="d-flex">
+        
+        {{>_menu}}
+        {{{body}}}
+
+    </div>
+    
+
+    <script src="/jquery/jquery.min.js"></script>
+    <script src="/popper/popper.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+
+</body>
+
+</html>
