@@ -53,7 +53,6 @@ router.post('/add-cat-pagamento', (req, res) => {
             req.flash('error_msg','Erro: Falha ao cadastrar categoria de pagamento! ')
             res.redirect('/admin/cat-pagamentos')
         })
-
     }
 })
 
