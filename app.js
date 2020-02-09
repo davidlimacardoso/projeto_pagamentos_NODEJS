@@ -10,6 +10,8 @@ const path = require('path') //Requisitar path
 const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
+//app.js criar a função formatDate para utilizar na view
+const moment = require('moment'); //Receber moment
 
 //***********************************************************
 
@@ -57,6 +59,16 @@ mongoose.set('useCreateIndex', true);
 
 //Incluir arquivos estáticos
 app.use(express.static(path.join(__dirname,'public')))
+
+//MOMENT FORMATAÇÕES
+app.engine('handlebars', handlebars({
+	defaultLayout: 'main',
+	helpers: {
+		formatDate: (date) => {
+			return moment(date).format('DD/MM/YYYY')
+		}
+	}
+}))
 
 //***********************************************************
 

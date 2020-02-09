@@ -14,5 +14,5 @@ const CatPagamento = new Schema({
     }
 })
 
-//Criar a model para instanciar quando precisar 
+//Criar a model para instanciar quando precisar
 mongoose.model('catpagamento', CatPagamento)

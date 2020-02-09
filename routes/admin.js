@@ -17,15 +17,23 @@ router.get('/pagamentos', (req,res) => {
     res.send('Página de Pagamentos!')
 })
 
+
 //Rota para página de categorias de pagamentos
 router.get('/cat-pagamentos', (req, res) => {
-    res.render('admin/cat-pagamentos')
+//LISTAR OS DADOS NA PÁGINA CATEGORIA DE PAGAMENTOS
+    CatPagamento.find().then((catpagamento) => {
+        res.render('admin/cat-pagamentos',{catpagamentos: catpagamento})
+    }).catch((erro) => {
+        req.flash('error_msg','Erro: Categoria de pagamento não foi encontrada!')
+        res.render('admin/cat-pagamentos')
+    })
 })
 
 router.get('/cad-cat-pagamento', (req, res) => {
     res.render('admin/cad-cat-pagamento')
 })
 
+//Adicionar dados cat pagamento
 router.post('/add-cat-pagamento', (req, res) => {
     //Validar input nome
     var errors = []
@@ -34,7 +42,7 @@ router.post('/add-cat-pagamento', (req, res) => {
         errors.push({error: "Necessário preencher o campo nome!"})
     }
     if(errors.length > 0){
-        
+
         res.render('/admin/cad-cat-pagamento',{errors: errors})
         req.flash('error_msg','Erro: Necessário preencher campo nome!')
         res.redirect('/admin/cad-cat-pagamento')
@@ -44,7 +52,7 @@ router.post('/add-cat-pagamento', (req, res) => {
         const addCatPagamento = {
             nome: req.body.nome
         }
-    
+
         //Salvar no BD
         new CatPagamento(addCatPagamento).save().then(()=>{
             req.flash('success_msg','Categoria de pagamento cadastrado com sucesso!')
@@ -54,6 +62,33 @@ router.post('/add-cat-pagamento', (req, res) => {
             res.redirect('/admin/cat-pagamentos')
         })
     }
+})
+
+//Editar dados cat pagamento
+router.get('/edit-cat-pagamento/:id', (req,res) => {
+    CatPagamento.findOne({_id: req.params.id}).then((catpagamento)=>{//PEGAR A CONSTANTE DA MODEL BUSCAR O _ID DA URL ATRAVÉS DO PARAMS
+        res.render('admin/edit-cat-pagamento',{catpagamento: catpagamento})
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: Falha ao buscar dados desta categoria! ')
+        res.redirect('/admin/cat-pagamentos')
+    })
+})
+
+//Update da categoria
+router.post('/update-cat-pagamento', (req, res)=>{
+    CatPagamento.findOne({ _id: req.body.id }).then((catpagamento)=>{
+        catpagamento.nome = req.body.nome
+        catpagamento.save().then(()=>{
+            req.flash('success_msg','Categoria editado com sucesso!')
+            res.redirect('/admin/cat-pagamentos')
+        }).catch((erro)=>{
+            req.flash('error_msg','Erro: Falha ao editar encotrada! ')
+            res.redirect('/admin/edit-cat-pagamento')
+        })
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: categoria não encotrada! ')
+        res.redirect('/admin/edit-cat-pagamento')
+    })
 })
 
 

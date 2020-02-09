@@ -1,7 +1,7 @@
 {
   "name": "projeto_pratico",
   "version": "1.0.0",
-  "description": "Projeto Prático utilizando Node.JS e MongoDB",
+  "description": "Painel administrativo para sistemas web, utilizando Node.JS e MongoDB",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +14,8 @@
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.0",
+    "handlebars": "^4.5.3",
+    "moment": "^2.24.0",
     "mongodb": "^3.5.2",
     "mongoose": "^5.8.9"
   }
