@@ -91,6 +91,16 @@ router.post('/update-cat-pagamento', (req, res)=>{
     })
 })
 
+//Deletar dados da categoriapagamento
+router.get('/del-cat-pagamento/:id',(req, res)=>{
+    CatPagamento.deleteOne({_id: req.params.id}).then(()=>{
+        req.flash('success_msg','Categoria excluído com sucesso!')
+            res.redirect('/admin/cat-pagamentos')
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: Falha ao excluir categoria! ')
+        res.redirect('/admin/cat-pagamentos')
+    })
+})
 
 //Exportar os módulos de rotas
 module.exports = router
