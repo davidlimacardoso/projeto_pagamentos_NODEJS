@@ -19,6 +19,10 @@ router.get('/pagamentos', (req,res) => {
 
 
 //Rota para página de categorias de pagamentos
+    router.get('/cad-cat-pagamento', (req, res) => {
+        res.render('admin/cad-cat-pagamento')
+    })
+
 router.get('/cat-pagamentos', (req, res) => {
 //LISTAR OS DADOS NA PÁGINA CATEGORIA DE PAGAMENTOS
     CatPagamento.find().then((catpagamento) => {
@@ -29,9 +33,22 @@ router.get('/cat-pagamentos', (req, res) => {
     })
 })
 
-router.get('/cad-cat-pagamento', (req, res) => {
-    res.render('admin/cad-cat-pagamento')
+//Visualizar detalhes da categoria
+router.get('/vis-cat-pagamento/:id', (req, res)=>{
+    CatPagamento.findOne({_id: req.params.id}).then((catpagamento) => {
+        res.render('admin/vis-cat-pagamento',{catpagamento: catpagamento})
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: Categoria de pagamento não foi encontrada!')
+        res.render('admin/cat-pagamentos')
+    })
 })
+// router.get('/vis-cat-pagamento/:id', (req, res) => {
+//     CatPagamento.findOne({_id: req.params.id}).then((catpagamento) => {
+//         res.render('admin/vis-cat-pagamentos',{catpagamento: catpagamento})
+// }).catch((erro)=>{
+//     req.flash('error_msg','Erro: Categoria de pagamento não foi encontrada!')
+//     res.render('admin/cat-pagamentos')
+// })
 
 //Adicionar dados cat pagamento
 router.post('/add-cat-pagamento', (req, res) => {
@@ -39,7 +56,7 @@ router.post('/add-cat-pagamento', (req, res) => {
     var errors = []
     //Ver se há dados no input
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
-        errors.push({error: "Necessário preencher o campo nome!"})
+        errors.push({error: 'Necessário preencher o campo nome!'})
     }
     if(errors.length > 0){
 
@@ -101,6 +118,8 @@ router.get('/del-cat-pagamento/:id',(req, res)=>{
         res.redirect('/admin/cat-pagamentos')
     })
 })
+
+
 
 //Exportar os módulos de rotas
 module.exports = router
