@@ -1,0 +1,89 @@
+//CRIAR A ROTA PARA ADICIONAR PAGAMENTO EM admin.js
+router.post('/add-pagamento',(req,res)=>{
+    //Validar o formulário
+    var errors = []
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
+        errors.push({error: 'Necessário preencher o campo nome'})
+    }
+    if(!req.body.valor || typeof req.body.valor == undefined || req.body.valor == null){
+        errors.push({error: 'Necessário preencher o campo valor'})
+    }
+    if(!req.body.catpagamento || typeof req.body.catpagamento == undefined || req.body.catpagamento == null){
+        errors.push({error: 'Necessário preencher o campo categoria de pagamento'})
+    }
+
+    if(errors.length > 0){
+        res.render('admin/cad-pagamento', {errors: errors})
+    }else{
+        const addPagamento = {
+            nome: req.body.nome,
+            valor: req.body.valor,
+            catpagamento: req.body.catpagamento
+        }
+        new Pagamento(addPagamento).save().then(()=>{
+            req.flash('success_msg','Pagamento adicionado com sucesso! ')
+            res.redirect('/admin/pagamentos')
+        }).catch((erro)=>{
+            req.flash('error_msg','Erro: Falha ao cadastrar pagamento! ')
+            res.redirect('/admin/cad-pagamentos')
+        })
+    }
+})
+//--------------------------------------------------------------------------------------
+
+EM admin/cad-pagamentos.handlebars
+
+<div class="content p-1">
+    <div class="list-group-item">
+        <div class="d-flex">
+            <div class="mr-auto p-2">
+                <h2 class="display-4 titulo">Cadastrar Pagamento</h2>
+            </div>
+            <div class="p-2">
+                <a href="/admin/pagamentos">
+                    <button class="btn btn-outline-info btn-sm">
+                        Listar
+                    </button>
+                </a>
+            </div>
+        </div>
+        <hr>
+        <form action="/admin/add-pagamento" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label><span class="text-danger">*</span> Nome</label>
+                    <input name="nome" type="text" class="form-control" id="nome" placeholder="Nome do pagamento">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label><span class="text-danger">*</span> Valor</label>
+                    <input name="valor" type="text" class="form-control" id="valor" placeholder="Valor do pagamento">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label>Categoria de Pagamento</label>
+                    <select name="catpagamento" id="catpagamento" class="form-control">
+                        {{#each catpagamentos}}
+                        <option value="{{ _id }}">{{nome}}</option>
+                        {{else}}
+                        <option value="">Categoria de pagamento não encontrado</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            <p>
+                <span class="text-danger">* </span>Campo obrigatório
+            </p>
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+        </form>
+        <div class="mt-3">
+            <!--MENSAGEM DE ERRO-->
+            {{>_msg}}
+        </div>
+        </div>
+    </div>
+</div>
