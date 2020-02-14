@@ -4,20 +4,23 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose') //incluir o mongoose por inserir dados no BD do cad-cat-pagamento
+
+//incluir a model catpagamento
 require('../models/CatPagamento')
-const CatPagamento = mongoose.model('catpagamento') //incluir a model catpagamento
+const CatPagamento = mongoose.model('catpagamento')
+
+//incluir model Pagamento
+require('../models/Pagamento')
+const Pagamento = mongoose.model('pagamento')
 
 //Rota da página inicial administrativo
 router.get('/', (req, res) => {
     res.render('admin/index')
 })
 
-//Rota da página pagamentos para o administrativo
-router.get('/pagamentos', (req,res) => {
-    res.send('Página de Pagamentos!')
-})
-
-
+//--------------------------------------------------------------//
+                        //CATEGORIA DE PAGAMENTOS
+//--------------------------------------------------------------//
 //Rota para página de categorias de pagamentos
     router.get('/cad-cat-pagamento', (req, res) => {
         res.render('admin/cad-cat-pagamento')
@@ -118,6 +121,28 @@ router.get('/del-cat-pagamento/:id',(req, res)=>{
         res.redirect('/admin/cat-pagamentos')
     })
 })
+
+//--------------------------------------------------------------//
+                        //PAGAMENTOS
+//--------------------------------------------------------------//
+//Redirecionamento para pagina pagamento
+router.get('/pagamentos', (req,res)=>{
+    res.render('admin/pagamentos')
+})
+
+//Rota página cadastrar pagamento
+router.get('/cad-pagamento', (req,res)=>{
+
+    //Extrair cat-pagamentos para o select
+    CatPagamento.find().then((catpagamento)=>{
+        //Renderizar formulário com as categorias de pagamento
+        res.render('admin/cad-pagamento',{catpagamentos: catpagamento})
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: Falha ao excluir categoria! ')
+        res.redirect('/admin/pagamentos')
+    })
+})
+
 
 
 
