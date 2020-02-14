@@ -1,0 +1,69 @@
+//INSTALAR O MONGO DB
+npm install --save mongodb
+
+//NPM INSTALL MONGOOSE
+npm install --save mongoose
+//----------------------------------------------------------
+//EM app.js CRIAR A CONEXÃO COM O BANCO
+//Conexão com MongoDB
+mongoose.connect('mongodb://localhost/my_database', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+console.log('Conexão realizada com sucesso!')
+}).catch((erro) => {
+    console.log('Falha na conexão! ' + erro)
+})
+
+//-----------------------------------------------------------
+//CRIAR A PASTA E ARQUIVO model/CatPagamento.js
+
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const CatPagamento = new Schema({
+    //Posição
+    nome: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    created: {
+        type: Date,
+        default: Date.now()
+    }
+})
+
+//Criar a model para instanciar quando precisar 
+mongoose.model('catpagamento', CatPagamento)
+//-----------------------------------------------------------
+
+//NO ARQUIVO views/admin/cad-cat-pagamento.handlebars incrementar o action no form
+<form action="/admin/add-cat-pagamento" method="POST">
+
+//------------------------------------------------------------
+
+//EM /routes/admin.js INSTANCIAR O MONGOOSE E CHAMAR O /models/CatPagamento
+
+const mongoose = require('mongoose') //incluir o mongoose por inserir dados no BD do cad-cat-pagamento
+require('../models/CatPagamento')
+const CatPagamento = mongoose.model('catpagamento') //incluir a model catpagamento
+
+//Criar a inserção dos dados no banco pegando os dados do formulario
+router.post('/add-cat-pagamento', (req, res) => {
+    const addCatPagamento = {
+        nome: req.body.nome
+    }
+    //Salvar no BD
+    new CatPagamento(addCatPagamento).save().then(()=>{
+        console.log('Dados cadastrado com sucesso!')
+        res.send('Dados cadastrado com sucesso!')
+    }).catch((erro)=>{
+        console.log('Erro: Fala ao cadastrar dados: ' + erro)
+    })
+})
+
+
+
+
+

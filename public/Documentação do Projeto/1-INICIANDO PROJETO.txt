@@ -1,0 +1,71 @@
+//CRIAR PROJETO UTILZANDO 
+npm init
+
+//Instalar pacotes
+
+//Instalar gerenciador de rotas
+npm install --save express
+
+//Instalar o express handlebars
+npm install --save express-handlebars
+
+//Instalar o middleware body-parser usado para receber os dados do formulário
+npm install --save body-parser
+
+//Instalar o mongoose ODM
+npm install -save mongoose
+
+//Em app.js criar as configurações
+//---------------------------------------------------------------------------------------
+//***********************************************************
+//Requisitar módulos
+//***********************************************************
+const express = require('express')
+const handlebars = require('express-handlebars')
+const bodyParser = require('body-parser')
+const app = express();
+//***********************************************************
+
+//***********************************************************
+//Configurações
+//***********************************************************
+
+//Body Parser
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json)
+
+//Handlebars
+app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.set('view engine','handlebars')
+
+//***********************************************************
+
+//***********************************************************
+//Iniciar o servidor
+//***********************************************************
+const PORT = 3000;
+app.listen(PORT,()=>{
+    console.log('Servidor Iniciado!')
+})
+//***********************************************************
+//---------------------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------------------
+//CRIAR DIRETÓRIOS view/layouts e arquivo main.handlebars dentro dele incluir o layout da página
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projeto Node.JS</title>
+</head>
+<body>
+    
+    {{{body}}}
+
+</body>
+</html>
+//---------------------------------------------------------------------------------------
+

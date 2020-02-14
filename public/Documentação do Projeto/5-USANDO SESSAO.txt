@@ -1,0 +1,102 @@
+//INSTALAR O MODULO DE SESSÃO
+npm install --save express-session
+
+//INSTALAR O MODULO PARA MANIPULAR AS MENSAGENS
+npm install --save connect-flash
+//-------------------------------------------------------------------------------
+
+//CONFIGURAR OS MÓDULOS EM app.js
+const session = require('express-session')
+const flash = require('connect-flash')
+
+//Session
+app.use(session({
+  secret: 'david123',
+  resave: true,
+  saveUninitialized: true
+}))
+
+//Flash
+app.use(flash())
+
+//Middleware
+app.use((req,res,next) => {
+  //CRIAR VARIÁVEIS GLOBAIS
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.error_msg = req.flash('error_msg')
+  next()
+})
+//-------------------------------------------------------------------------------
+
+
+//Criei um arquivo em /partials/_msg.handlebars
+
+<!--MENSAGEM DE SUCESSO!-->
+        {{#if success_msg}}
+        <div class="alert alert-success" role="alert">
+            {{success_msg}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/if}}
+        
+        <!--MENSAGEM DE ERRO!-->
+        {{#if error_msg}}
+        <div class="alert alert-danger" role="alert">
+            {{error_msg}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/if}}
+        
+        <!--Mensagem de validação retornando erro-->
+        {{#each errors}}
+            <div class="alert alert-warning" role="alert">
+            {{error}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {{/each}}
+//-----------------------------------------------------------------------------------------
+
+//NA PÁGINA ONDE DEVE APARECER A MENSAGEM COLOQUE {{>_msg}} O NODE INTERPRETA O /partials
+
+//-----------------------------------------------------------------------------------------
+
+//NA VALIDAÇÃO PODE INSERIR A MENSAGEM NA VARIÁVEL GLOBAL
+//EXEMPLO NO routes/admin.js
+
+router.post('/add-cat-pagamento', (req, res) => {
+    //Validar input nome
+    var errors = []
+    //Ver se há dados no input
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
+        errors.push({error: "Necessário preencher o campo nome!"})
+    }
+    if(errors.length > 0){
+        
+        res.render('/admin/cad-cat-pagamento',{errors: errors})
+        req.flash('error_msg','Erro: Necessário preencher campo nome!')
+        res.redirect('/admin/cad-cat-pagamento')
+
+    }else{
+        //Pegar os dados do input
+        const addCatPagamento = {
+            nome: req.body.nome
+        }
+    
+        //Salvar no BD
+        new CatPagamento(addCatPagamento).save().then(()=>{
+            req.flash('success_msg','Categoria de pagamento cadastrado com sucesso!')
+            res.redirect('/admin/cat-pagamentos')
+        }).catch(()=>{
+            req.flash('error_msg','Erro: Falha ao cadastrar categoria de pagamento! ')
+            res.redirect('/admin/cat-pagamentos')
+        })
+
+    }
+})
+

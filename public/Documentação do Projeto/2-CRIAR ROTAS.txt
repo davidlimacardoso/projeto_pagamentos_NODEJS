@@ -1,0 +1,36 @@
+//CRIAR O ARQUIVO routes/admin.js E COLOCAR O SEGUINTE CÓDIGO
+
+//***********************************************************
+//Carregando os módulos
+//***********************************************************
+const express = require('express')
+const router = express.Router()
+
+//Rota da página inicial administrativo
+router.get('/', (req, res) => {
+    res.send('Página inicial do administrativo')
+})
+//Rota da página pagamentos para o administrativo
+router.get('/pagamentos', (req,res) => {
+    res.send('Página de Pagamentos!')
+})
+
+//Exportar os módulos de rotas
+module.exports = router
+//--------------------------------------------------------------------
+
+//EM app.js REQUISITAR A ROTA E TRAZER A ROTA DO ADMIN
+
+//***********************************************************
+//Requisitar módulos
+//***********************************************************
+const admin = require('./routes/admin') //Trazer rotas do admin
+
+//***********************************************************
+//Rotas
+//***********************************************************
+//Rota do admin
+app.use('/admin',admin)
+
+//AGORA PODE REQUISITAR A ROTA NA URL:
+http://localhost:3000/admin

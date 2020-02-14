@@ -1,0 +1,75 @@
+//NO BOTAO EDITAR EM cat-pagamentos.handlebars CRIAR UM HREF COM ID
+<a href="/admin/edit-cat-pagamento/{{_id}}" class="btn btn-outline-warning btn-sm">Editar</a>
+
+//-------------------------------------------------------------------------------------
+
+//NA PÁGINA edit-cat-pagamento.hadlebars CRIAR O FURMULARIO DE CADASTRO
+//CRIAR UM INPUT HIDDEN RECEBENDO O NAME COM ID PARA BUSCAR NO BD
+
+<div class="content p-1">
+    <div class="list-group-item">
+        <div class="d-flex">
+            <div class="mr-auto p-2">
+                <h2 class="display-4 titulo">Editar Categoria de Pagamento</h2>
+            </div>
+            <div class="p-2">
+                <a href="/admin/cat-pagamentos">
+                    <button class="btn btn-outline-info btn-sm">
+                        Listar
+                    </button>
+                </a>
+            </div>
+        </div>
+        <hr>
+        <form action="/admin/update-cat-pagamento/" method="POST">
+        <input type="hidden" name="id" value="{{catpagamento.id}}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label><span class="text-danger">*</span> Nome</label>
+                    <!--VALUE RECEBE O VALOR ENVIADO  NO catpagamento-->
+                    <input name="nome" value="{{catpagamento.nome}}" type="text" class="form-control" id="nome" placeholder="Nome da categoria de pagamento">
+                </div>
+            </div>
+            <p>
+                <span class="text-danger">* </span>Campo obrigatório
+            </p>
+            <button type="submit" class="btn btn-success">Editar</button>
+        </form>
+        <div class="mt-3">
+            <!--MENSAGEM DE ERRO-->
+            {{>_msg}}
+        </div>
+    </div>
+</div>
+//--------------------------------------------------------------------------------------
+//EM admin.js CRIAR A ROTA PARAPÁGINA EDITAR E FORMULÁRIO DE EDIÇÃO
+
+//Editar dados cat pagamento
+router.get('/edit-cat-pagamento/:id', (req,res) => {
+    CatPagamento.findOne({_id: req.params.id}).then((catpagamento)=>{//PEGAR A CONSTANTE DA MODEL BUSCAR O _ID DA URL ATRAVÉS DO PARAMS
+        res.render('admin/edit-cat-pagamento',{catpagamento: catpagamento})
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: Falha ao buscar dados desta categoria! ')
+        res.redirect('/admin/cat-pagamentos')
+    })
+})
+
+//Update da categoria
+router.post('/update-cat-pagamento', (req, res)=>{
+    CatPagamento.findOne({ _id: req.body.id }).then((catpagamento)=>{
+        catpagamento.nome = req.body.nome
+        catpagamento.save().then(()=>{
+            req.flash('success_msg','Categoria editado com sucesso!')
+            res.redirect('/admin/cat-pagamentos')
+        }).catch((erro)=>{
+            req.flash('error_msg','Erro: Falha ao editar encotrada! ')
+            res.redirect('/admin/edit-cat-pagamento')
+        })
+    }).catch((erro)=>{
+        req.flash('error_msg','Erro: categoria não encotrada! ')
+        res.redirect('/admin/edit-cat-pagamento')
+    })
+})
+
+
+

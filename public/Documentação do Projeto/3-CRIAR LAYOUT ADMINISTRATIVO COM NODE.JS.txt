@@ -1,0 +1,41 @@
+//CRIAR PATH EM app.js
+//***********************************************************
+//Requisitar módulos
+//***********************************************************
+const path = require('path') //Requisitar path
+
+//***********************************************************
+//Configurações
+//***********************************************************
+//Incluir arquivos estáticos
+app.use(express.static(path.join(__dirname,'public')))
+//---------------------------------------------------------
+
+//EM ROUTES admin.js INCLUIR ROTA INDEX PARA ADMINISTRADOR
+
+//Rota da página inicial administrativo
+router.get('/', (req, res) => {
+    res.render('admin/index')
+})
+
+//----------------------------------------------------------
+
+//CRIAR PASTA partials ONDE FICARÁ PARTES DO SITE E CRIAR OS ARQUIVOS:
+_header.handlebars
+_menu.handlebars
+
+//-------------------------------------------------------------
+
+//NO main.handlebars INCLUIR OS PARTIALS
+
+<body>
+
+    {{>_header}}
+
+    <div class="d-flex">
+        
+        {{>_menu}}
+        {{{body}}}
+
+    </div>
+</body>
